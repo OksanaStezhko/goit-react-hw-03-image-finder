@@ -1,0 +1,30 @@
+.item {
+  margin-bottom: 10px;
+
+  /* width: 100px; */
+}
+
+.button {
+  display: block;
+  padding: 5px;
+  width: 150px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: capitalize;
+  margin-right: auto;
+  margin-left: auto;
+
+  background-color: rgb(199, 221, 240);
+  border: 1px solid rgb(106, 153, 207);
+  -webkit-box-shadow: 13px 5px 22px -4px rgba(34, 60, 80, 0.32);
+  -moz-box-shadow: 13px 5px 22px -4px rgba(34, 60, 80, 0.32);
+  box-shadow: 13px 5px 22px -4px rgba(34, 60, 80, 0.32);
+}
+
+.button:hover,
+.button:focus {
+  background-color: rgba(148, 255, 212, 0.8);
+  border: 1px solid rgb(106, 153, 207);
+  outline: 1px solid rgb(106, 153, 207);
+}
