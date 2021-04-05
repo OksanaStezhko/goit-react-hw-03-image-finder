@@ -1,5 +1,9 @@
-import React, { Component } from 'react';
-window.scrollTo({
-  top: document.documentElement.scrollHeight,
-  behavior: 'smooth',
-});
+import React from 'react';
+
+const Button = ({ onClick }) => (
+  <button type="button" className="Button" onClick={onClick}>
+    Load more
+  </button>
+);
+
+export default Button;
