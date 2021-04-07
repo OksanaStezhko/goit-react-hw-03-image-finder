@@ -5,6 +5,8 @@ import ImageGallery from './components/ImageGallery';
 import Button from './components/Button';
 import Loader from './components/Loader';
 import Modal from './components/Modal';
+import Error from './components/Error';
+
 import fetchImg from './api/api-pixabay';
 
 const PAGESIZE = 12;
@@ -18,6 +20,7 @@ class App extends Component {
     error: null,
     isLoading: false,
     largeImage: '',
+    message: '',
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -53,8 +56,18 @@ class App extends Component {
     this.fetchApi();
   };
 
-  handleClickImage = () => {
-    this.setState({ showModal: true });
+  handleClickImage = imageItem => {
+    this.setState({
+      showModal: true,
+      largeImage: imageItem,
+    });
+  };
+
+  closeModal = () => {
+    this.setState(prevState => ({
+      largeImage: '',
+      showModal: !prevState.showModal,
+    }));
   };
 
   fetchApi() {
@@ -75,21 +88,40 @@ class App extends Component {
   }
 
   render() {
-    const { images, isLoading, totalHits, error, showModal } = this.state;
+    const {
+      images,
+      isLoading,
+      totalHits,
+      error,
+      showModal,
+      largeImage,
+      searchQuery,
+    } = this.state;
     const showButton = totalHits > PAGESIZE;
 
     return (
       <Container>
         <Searchbar onSubmit={this.handleChangeQuery} />
-        {!error && (
-          <ImageGallery
-            images={images}
-            onClickImage={this.handleClickImage}
-          ></ImageGallery>
-        )}
+        {(error && (
+          <Error
+            text={'Что-то пошло не так, попробуйте еще раз сделать запрос...'}
+          />
+        )) ||
+          (totalHits === 0 && searchQuery && !isLoading && (
+            <Error
+              text={'По вашему запросу ничего не найдено, повторите попытку.'}
+            />
+          ))}
+
+        <ImageGallery
+          images={images}
+          onClickImage={this.handleClickImage}
+        ></ImageGallery>
         {isLoading && <Loader />}
         {showButton && <Button onClick={this.handleClickButton} />}
-        {showModal && <Modal />}
+        {showModal && (
+          <Modal onClose={this.closeModal} largeImage={largeImage} />
+        )}
       </Container>
     );
   }

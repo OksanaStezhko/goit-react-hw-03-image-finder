@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { createPortal } from 'react-dom';
-import './Modal.scss';
+import style from './Modal.module.css';
 
 const modalRef = document.querySelector('#modal');
 
@@ -14,8 +14,9 @@ class Modal extends Component {
   }
 
   handleKeyDown = event => {
+    const { onClose } = this.props;
     if (event.code === 'Escape') {
-      this.props.onClose();
+      onClose();
     }
   };
 
@@ -26,10 +27,11 @@ class Modal extends Component {
   };
 
   render() {
+    const { largeImage } = this.props;
     return createPortal(
-      <div className="Overlay" onClick={this.handleOverlayClick}>
-        <div className="Modal">
-          <img src={this.props.largeImage} alt="" />
+      <div className={style.Overlay} onClick={this.handleOverlayClick}>
+        <div className={style.modal}>
+          <img src={largeImage} alt="" />
         </div>
       </div>,
       modalRef,

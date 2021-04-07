@@ -13,5 +13,3 @@ const fetchImg = ({ currentPage, searchQuery }) => {
 };
 
 export default fetchImg;
-
-//   `https://pixabay.com/api/?key=${keyApi}&per_page=12&q=${this.searchQuery}&page=${this.page}`
