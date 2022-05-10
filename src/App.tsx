@@ -11,8 +11,20 @@ import fetchImg from './api/api-pixabay';
 
 const PAGESIZE = 12;
 
+interface IState {
+  images: [];
+  totalHits: number;
+  searchQuery: string;
+  currentPage: number;
+  error: Error | null;
+  isLoading: boolean;
+  largeImage: string;
+  showModal: boolean;
+  message: string;
+}
+
 class App extends Component {
-  state = {
+  state: IState = {
     images: [],
     totalHits: 0,
     searchQuery: '',
@@ -20,10 +32,11 @@ class App extends Component {
     error: null,
     isLoading: false,
     largeImage: '',
+    showModal: false,
     message: '',
   };
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate(prevProps: {}, prevState: IState, snapshot: boolean) {
     if (prevState.searchQuery !== this.state.searchQuery) {
       this.fetchApi();
     }
@@ -35,12 +48,12 @@ class App extends Component {
     }
   }
 
-  getSnapshotBeforeUpdate(prevProps, prevState) {
+  getSnapshotBeforeUpdate(prevProps: {}, prevState: IState) {
     if (prevState.images.length < this.state.images.length) return true;
     return false;
   }
 
-  handleChangeQuery = query => {
+  handleChangeQuery = (query: string) => {
     this.setState({
       searchQuery: query,
       images: [],
@@ -56,7 +69,7 @@ class App extends Component {
     this.fetchApi();
   };
 
-  handleClickImage = imageItem => {
+  handleClickImage = (imageItem: string) => {
     this.setState({
       showModal: true,
       largeImage: imageItem,
@@ -64,7 +77,7 @@ class App extends Component {
   };
 
   closeModal = () => {
-    this.setState(prevState => ({
+    this.setState((prevState: IState) => ({
       largeImage: '',
       showModal: !prevState.showModal,
     }));
@@ -78,7 +91,7 @@ class App extends Component {
     fetchImg(options)
       .then(({ hits, totalHits }) => {
         this.setState({ totalHits: totalHits });
-        this.setState(prevState => ({
+        this.setState((prevState: IState) => ({
           images: [...prevState.images, ...hits],
           currentPage: prevState.currentPage + 1,
         }));
@@ -102,26 +115,30 @@ class App extends Component {
     return (
       <Container>
         <Searchbar onSubmit={this.handleChangeQuery} />
-        {(error && (
-          <Error
-            text={'Что-то пошло не так, попробуйте еще раз сделать запрос...'}
-          />
-        )) ||
-          (totalHits === 0 && searchQuery && !isLoading && (
+        <>
+          {(error && (
             <Error
-              text={'По вашему запросу ничего не найдено, повторите попытку.'}
+              text={'Что-то пошло не так, попробуйте еще раз сделать запрос...'}
             />
-          ))}
+          )) ||
+            (totalHits === 0 && searchQuery && !isLoading && (
+              <Error
+                text={'По вашему запросу ничего не найдено, повторите попытку.'}
+              />
+            ))}
+        </>
 
         <ImageGallery
           images={images}
           onClickImage={this.handleClickImage}
         ></ImageGallery>
-        {isLoading && <Loader />}
-        {showButton && <Button onClick={this.handleClickButton} />}
-        {showModal && (
-          <Modal onClose={this.closeModal} largeImage={largeImage} />
-        )}
+        <> {isLoading && <Loader />}</>
+        <> {showButton && <Button onClick={this.handleClickButton} />}</>
+        <>
+          {showModal && (
+            <Modal onClose={this.closeModal} largeImage={largeImage} />
+          )}
+        </>
       </Container>
     );
   }

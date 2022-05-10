@@ -1,8 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import style from './ImageGalleryItem.module.css';
 
-const ImageGalleryItem = ({ webformatURL, largeImage, onClickImage }) => (
+interface Props {
+  webformatURL: string;
+  largeImage: string;
+  onClickImage: (x: string) => void;
+}
+const ImageGalleryItem = ({
+  webformatURL,
+  largeImage,
+  onClickImage,
+}: Props) => (
   <li
     className={style.ImageGalleryItem}
     onClick={() => onClickImage(largeImage)}
@@ -10,11 +18,5 @@ const ImageGalleryItem = ({ webformatURL, largeImage, onClickImage }) => (
     <img src={webformatURL} alt="" className={style.ImageGalleryItem__image} />
   </li>
 );
-
-ImageGalleryItem.propTypes = {
-  webformatURL: PropTypes.string.isRequired,
-  largeImage: PropTypes.string.isRequired,
-  onClickImage: PropTypes.func.isRequired,
-};
 
 export default ImageGalleryItem;

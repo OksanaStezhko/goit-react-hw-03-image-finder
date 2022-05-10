@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { createPortal } from 'react-dom';
-import PropTypes from 'prop-types';
 import style from './Modal.module.css';
 
-const modalRef = document.querySelector('#modal');
+const modalRef: HTMLElement | null = document.querySelector('#modal');
 
-class Modal extends Component {
+interface Props {
+  largeImage: string;
+  onClose: () => void;
+}
+class Modal extends Component<Props> {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
   }
@@ -14,14 +17,14 @@ class Modal extends Component {
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  handleKeyDown = event => {
+  handleKeyDown = (event: KeyboardEvent) => {
     const { onClose } = this.props;
     if (event.code === 'Escape') {
       onClose();
     }
   };
 
-  handleOverlayClick = event => {
+  handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.currentTarget === event.target) {
       this.props.onClose();
     }
@@ -29,20 +32,17 @@ class Modal extends Component {
 
   render() {
     const { largeImage } = this.props;
-    return createPortal(
-      <div className={style.Overlay} onClick={this.handleOverlayClick}>
-        <div className={style.modal}>
-          <img src={largeImage} alt="" />
-        </div>
-      </div>,
-      modalRef,
-    );
+    return !modalRef
+      ? null
+      : createPortal(
+          <div className={style.Overlay} onClick={this.handleOverlayClick}>
+            <div className={style.modal}>
+              <img src={largeImage} alt="" />
+            </div>
+          </div>,
+          modalRef,
+        );
   }
 }
-
-Modal.propTypes = {
-  largeImage: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
-};
 
 export default Modal;
